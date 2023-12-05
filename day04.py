@@ -36,10 +36,9 @@ def main():
 
     for card in range(1, len(winning_numbers) + 1):
         quantity, next_winner_range = quantity_dict[card]
-        for _ in range(0, quantity):
-            for next_winner in range(1, next_winner_range + 1):
-                quantity_dict[card+next_winner] = \
-                    (quantity_dict[card + next_winner][0] + 1, quantity_dict[card + next_winner][1])
+        for next_winner in range(1, next_winner_range + 1):
+            quantity_dict[card+next_winner] = \
+                (quantity_dict[card + next_winner][0] + quantity, quantity_dict[card + next_winner][1])
 
     cards_number = functools.reduce(lambda acc, x: acc + x[0], quantity_dict.values(), 0)
 
