@@ -5,7 +5,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 def calculate_distances(time, record):
-    distances = [(time - speed) * speed for speed in range(time + 1)]
+    distances = [(time - speed) * speed for speed in range(1, time)]
     return [distance for distance in distances if distance > record]
 
 
