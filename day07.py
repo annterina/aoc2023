@@ -1,10 +1,12 @@
 import os
 import functools
+import statistics
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 hand_strengths = {'FIVE': 1, 'FOUR': 2, 'FULL_HOUSE': 3, 'THREE': 4, 'TWO_PAIRS': 5, 'PAIR': 6, 'HIGH_CARD': 7}
+
 card_strengths_1 = {'A': 1, 'K': 2, 'Q': 3, 'J': 4, 'T': 5, '9': 6, '8': 7, '7': 8, '6': 9, '5': 10, '4': 11, '3': 12, '2': 13}
 card_strengths_2 = card_strengths_1.copy()
 card_strengths_2['J'] = 14
@@ -34,7 +36,7 @@ def hand(card):
         return hand_strengths['HIGH_CARD']
 
 
-def compare_cards_in_order(card1, card2, strengths=card_strengths_1):
+def compare_cards_in_order(card1, card2, strengths):
     for i in range(len(card1)):
         if strengths[card1[i]] > strengths[card2[i]]:
             return 1
@@ -43,15 +45,26 @@ def compare_cards_in_order(card1, card2, strengths=card_strengths_1):
     return 0
 
 
+def fill_jokers(cards):
+    non_joker_cards = [card for card in cards if card != 'J']
+    mode = statistics.mode(non_joker_cards) if non_joker_cards else 'A'
+    return cards.replace('J', mode)
+
+
+def compare_hands(hand1, hand2):
+    return (hand1 > hand2) - (hand1 < hand2)
+
+
 def compare(card1, card2):
     hand1 = hand(card1[0])
     hand2 = hand(card2[0])
-    if hand1 > hand2:
-        return 1
-    elif hand1 < hand2:
-        return -1
-    else:
-        return compare_cards_in_order(card1[0], card2[0])
+    return compare_hands(hand1, hand2) or compare_cards_in_order(card1[0], card2[0], card_strengths_1)
+
+
+def compare_with_jokers(card1, card2):
+    hand1 = hand(fill_jokers(card1[0]))
+    hand2 = hand(fill_jokers(card2[0]))
+    return compare_hands(hand1, hand2) or compare_cards_in_order(card1[0], card2[0], card_strengths_2)
 
 
 def main():
@@ -69,6 +82,17 @@ def main():
         rank -= 1
 
     print('Part 1:')
+    print(total_winnings)
+
+    sorted_cards_with_jokers = sorted(cards, key=functools.cmp_to_key(compare_with_jokers))
+
+    rank = len(sorted_cards_with_jokers)
+    total_winnings = 0
+    for card in sorted_cards_with_jokers:
+        total_winnings += rank * card[1]
+        rank -= 1
+
+    print('Part 2:')
     print(total_winnings)
 
 
