@@ -21,7 +21,7 @@ def main():
     filepath = f'{dir_path}/input/day08.txt'
 
     with open(filepath) as f:
-        lines = lines = f.read().strip().split('\n\n')
+        lines = f.read().strip().split('\n\n')
 
     code = lines[0]
     elements = dict(list(map(lambda x: parse_element(x), lines[1].split('\n'))))
@@ -29,7 +29,7 @@ def main():
     print('Part 1:')
     print(traverse(code, elements))
 
-    starts = ['AAA', 'MGA', 'DGA', 'TLA', 'RDA', 'DPA']
+    starts = [key for key in elements.keys() if key.endswith('A')]
     cycles = list(map(lambda x: traverse(code, elements, x, 'Z'), starts))
 
     print('Part 2:')
