@@ -3,8 +3,9 @@ import os
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
-def max_in_pipe(matrix, coordinates, max=1, direction='north'):
+def find_loop(matrix, coordinates, direction='north'):
     row, column = coordinates
+    pipe = [coordinates]
 
     while True:
         value = matrix[row][column]
@@ -61,8 +62,8 @@ def max_in_pipe(matrix, coordinates, max=1, direction='north'):
                 break
         else:
             break
-        max += 1
-    return max
+        pipe.append((row, column))
+    return pipe
 
 
 def main():
@@ -80,9 +81,9 @@ def main():
                 start_coordinates = (i, j)
                 break
 
-    max_loop = max_in_pipe(matrix, (start_coordinates[0] - 1, start_coordinates[1]))
+    loop = find_loop(matrix, (start_coordinates[0] - 1, start_coordinates[1]))
     print('Part 1:')
-    print(int(max_loop/2))
+    print(int(len(loop)/2))
 
 
 if __name__ == '__main__':
